@@ -1,55 +1,115 @@
 apply plugin: 'com.android.application'
-
 apply plugin: 'kotlin-android'
-
+apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android-extensions'
 
 android {
-    compileSdkVersion 28
+    def config = rootProject.extensions.getByName("ext")
+
+    compileSdkVersion config["compile_sdk"]
+    buildToolsVersion '28.0.3'
+
     defaultConfig {
-        applicationId "com.davidups.roomlivedata"
-        minSdkVersion 19
-        targetSdkVersion 28
-        versionCode 1
-        versionName "1.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        applicationId config["application_id"]
+        minSdkVersion config["min_sdk"]
+        targetSdkVersion config["target_sdk"]
+        versionCode config["version_code"]
+        versionName config["version_name"]
+
+        // Necesario para el schema de la base de datos
+        kapt {
+            arguments {
+                arg("room.schemaLocation", "$projectDir/schemas".toString())
+            }
+        }
     }
+
+    packagingOptions {
+        exclude 'LICENSE.txt'
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/ASL2.0'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE'
+    }
+
+    lintOptions {
+        quiet true
+        abortOnError false
+        ignoreWarnings true
+        disable 'InvalidPackage'            //Some libraries have issues with this.
+        disable 'OldTargetApi'
+        //Lint gives this warning but SDK 20 would be Android L Beta.
+        disable 'IconDensities'             //For testing purpose. This is safe to remove.
+        disable 'IconMissingDensityFolder'  //For testing purpose. This is safe to remove.
+    }
+
+    signingConfigs {
+        /*debug {
+            storeFile file('../buildsystem/certificado.keystore')
+            storePassword 'android'
+            keyAlias 'android'
+            keyPassword 'android'
+        }*/
+    }
+
     buildTypes {
+        debug {
+            minifyEnabled false
+            //signingConfig signingConfigs.debug
+        }
         release {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
+        main.java.srcDirs += [file("$buildDir/generated/source/kapt/main")]
     }
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'com.android.support:appcompat-v7:28.0.0'
-    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.2'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    def applicationDependencies = rootProject.ext.mainApplication
+    def developmentDependencies = rootProject.ext.development
 
-    // Room components
-    implementation 'android.arch.persistence.room:runtime:1.1.1'
-    kapt 'android.arch.persistence.room:compiler:1.1.1'
-    androidTestImplementation 'android.arch.persistence.room:testing:1.1.1'
+    //Compile time dependencies
+    implementation 'com.android.support:support-v4:28.0.0'
+    kapt applicationDependencies.archComponentsCompiler
+    kapt applicationDependencies.daggerCompiler
+    compileOnly applicationDependencies.javaxAnnotation
+    compileOnly applicationDependencies.javaxInject
 
-    // Lifecycle components
-    implementation 'android.arch.lifecycle:extensions:1.1.1'
-    annotationProcessor 'android.arch.lifecycle:compiler:1.1.1'
+    //Application dependencies
+    implementation applicationDependencies.kotlin
+    implementation applicationDependencies.kotlinCoroutines
+    implementation applicationDependencies.kotlinCoroutinesAndroid
+    implementation applicationDependencies.appCompat
+    implementation applicationDependencies.constraintLayout
+    implementation applicationDependencies.archComponents
+    implementation applicationDependencies.cardView
+    implementation applicationDependencies.recyclerView
+    implementation applicationDependencies.design
+    implementation applicationDependencies.androidAnnotations
+    implementation applicationDependencies.glide
+    implementation applicationDependencies.dagger
+    implementation applicationDependencies.retrofit
+    implementation applicationDependencies.okhttpLoggingInterceptor
+    implementation 'com.google.code.gson:gson:2.8.5'
+    implementation 'com.intuit.sdp:sdp-android:1.0.6'
 
-    // Coroutines
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.26.1'
+    def room_version = "1.1.1"
+    implementation "android.arch.persistence.room:runtime:$room_version"
+    kapt "android.arch.persistence.room:compiler:$room_version" // use kapt for Kotlin
 
-    // Look Database
+    //Development dependencies
+    debugImplementation developmentDependencies.leakCanary
+    releaseImplementation developmentDependencies.leakCanaryNoop
+    testImplementation developmentDependencies.leakCanaryNoop
+
     debugImplementation 'com.amitshekhar.android:debug-db:1.0.4'
-
-    //Coroutines
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.0.0'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.0.0'
-    implementation 'com.android.support:recyclerview-v7:28.0.0'
-    implementation 'com.android.support:design:28.0.0'
+    implementation 'com.google.firebase:firebase-core:16.0.8'
+    implementation 'com.google.firebase:firebase-database:16.1.0'
 
 }
+apply plugin: 'com.google.gms.google-services'

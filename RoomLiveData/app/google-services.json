@@ -1,0 +1,35 @@
+{
+  "project_info": {
+    "project_number": "46747104285",
+    "firebase_url": "https://roomretrofitclean.firebaseio.com",
+    "project_id": "roomretrofitclean",
+    "storage_bucket": "roomretrofitclean.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:46747104285:android:b507c27d902906a7",
+        "android_client_info": {
+          "package_name": "com.skeleton.android"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDvgdxNkHU66ybRnB6iR1sHGyl4CTW0Ip4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "46747104285-ut3r6095v812rsiojlnaqhhi382p0uju.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

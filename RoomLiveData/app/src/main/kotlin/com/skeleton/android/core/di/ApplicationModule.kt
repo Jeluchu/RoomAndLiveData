@@ -1,6 +1,7 @@
 package com.skeleton.android.core.di
 
 import android.content.Context
+import com.google.firebase.database.FirebaseDatabase
 import com.skeleton.android.AndroidApplication
 import com.skeleton.android.BuildConfig
 import com.skeleton.android.features.people.PeopleRepository
@@ -12,10 +13,11 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
-import javax.sql.CommonDataSource
 
 @Module
 class ApplicationModule(private val application: AndroidApplication) {
+
+
 
     @Provides
     @Singleton
@@ -29,6 +31,12 @@ class ApplicationModule(private val application: AndroidApplication) {
                 .client(createClient())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
+    }
+
+    @Provides
+    @Singleton
+    fun implementationFirebase(): FirebaseDatabase {
+        return FirebaseDatabase.getInstance()
     }
 
     private fun createClient(): OkHttpClient {

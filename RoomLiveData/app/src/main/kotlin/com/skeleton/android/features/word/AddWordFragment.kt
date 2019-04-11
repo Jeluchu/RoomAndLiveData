@@ -26,9 +26,6 @@ class AddWordFragment : BaseFragment() {
     private lateinit var addWordViewModel: AddWordViewModel
     private lateinit var getPeopleViewModel: GetPeopleViewModel
 
-    private lateinit var database: FirebaseDatabase
-    private lateinit var myRef: DatabaseReference
-
     private var word: WordView? = null
 
     override fun layoutId() = R.layout.fragment_add_word

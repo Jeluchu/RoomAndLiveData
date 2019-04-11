@@ -6,7 +6,7 @@ import javax.inject.Inject
 class AddWord
 @Inject constructor(private val wordRepository: WordRepository): UseCase<Any, AddWord.Params>(){
 
-    override suspend fun run(params: Params) = wordRepository.add(params.word)
+    override suspend fun run(params: Params) = wordRepository.addFirebase(params.word)
 
     class Params(val word: Word)
 

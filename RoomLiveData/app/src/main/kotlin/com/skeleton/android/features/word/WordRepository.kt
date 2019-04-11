@@ -11,8 +11,18 @@ interface WordRepository {
     fun words(): Either<Failure, List<Word>>
     fun add(word: Word): Either<Failure, Any>
 
+    fun addFirebase(word: Word): Either<Failure, Any>
+
     class Network
     @Inject constructor(private val service: WordService): WordRepository{
+        override fun addFirebase(word: Word): Either<Failure, Any> {
+            return try {
+                Either.Right(service.addFirebase(word.toWordEntity()))
+            } catch (e: Exception){
+                Either.Left(Failure.CustomError(ServiceKOs.DATABASE_ACCESS_ERROR, e.message))
+            }
+        }
+
         override fun words(): Either<Failure, List<Word>> {
             return try {
                 Either.Right(service.words().map {

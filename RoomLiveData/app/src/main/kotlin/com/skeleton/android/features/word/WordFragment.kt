@@ -1,7 +1,6 @@
 package com.skeleton.android.features.word
 
 import android.os.Bundle
-import android.os.Message
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import com.skeleton.android.R
@@ -27,18 +26,6 @@ class WordFragment : BaseFragment() {
     private lateinit var getGetWordViewModel: GetWordViewModel
     private lateinit var addWordViewModel: AddWordViewModel
 
-    private var word: WordView? = null
-
-    /*companion object {
-        fun newInstance(word: WordView): WordFragment{
-            val fragment = WordFragment()
-            val args = Bundle()
-            args.putParcelable("word", word)
-            fragment.arguments = args
-            return fragment
-        }
-    }*/
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         appComponent.inject(this)
@@ -57,13 +44,11 @@ class WordFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        /*if (arguments != null) {
-            word = arguments!!.getParcelable("word")
-            //initLayout()
-        }*/
+
         initializeView()
         initListeners()
         loadWords()
+
     }
 
     private fun initListeners(){
@@ -73,7 +58,6 @@ class WordFragment : BaseFragment() {
     private fun initializeView(){
         rvWords.adapter = wordAdapter
         rvWords.layoutManager = LinearLayoutManager(activity)
-        //Adapter
     }
 
     private fun loadWords(){
@@ -109,15 +93,9 @@ class WordFragment : BaseFragment() {
     }
 
     private fun addWord(){
-        /*showProgress()
-        var word = ""
-        if (wordAdapter.itemCount % 2 == 0){
-            word = "The word"
-        } else{
-            word = "Is a vampire"
-        }
-        addWordViewModel.add(Word(wordAdapter.itemCount + 1,word))*/
+
         navigator.showAddWordFragment(activity!!)
+
     }
 
     private fun onWordCreated(any: Any?){

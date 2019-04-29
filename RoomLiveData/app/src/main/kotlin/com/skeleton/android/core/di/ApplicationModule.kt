@@ -1,7 +1,11 @@
 package com.skeleton.android.core.di
 
 import android.content.Context
+import android.support.v7.widget.RecyclerView
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.skeleton.android.AndroidApplication
 import com.skeleton.android.BuildConfig
 import com.skeleton.android.features.people.PeopleRepository
@@ -47,6 +51,7 @@ class ApplicationModule(private val application: AndroidApplication) {
         }
         return okHttpClientBuilder.build()
     }
+
 
     @Provides
     @Singleton

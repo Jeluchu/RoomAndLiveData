@@ -5,7 +5,7 @@ import javax.inject.Inject
 
 class GetWord
 @Inject constructor(private val wordRepository: WordRepository): UseCase<List<Word>, GetWord.Params>(){
-    override suspend fun run(params: GetWord.Params) = wordRepository.words()
+    override suspend fun run(params: Params) = wordRepository.words()
 
     class Params
 }

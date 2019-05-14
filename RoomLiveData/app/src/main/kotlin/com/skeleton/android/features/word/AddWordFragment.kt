@@ -68,7 +68,7 @@ class AddWordFragment : BaseFragment() {
 
     private fun addWord(){
         if (!etWord.text!!.isEmpty()){showProgress()
-            addWordViewModel.add(Word(0,etWord.text.toString()))
+            addWordViewModel.add(Word("",etWord.text.toString()))
             navigator.showWordFragment(activity!!)
         }
     }

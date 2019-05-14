@@ -1,8 +1,8 @@
 package com.skeleton.android.features.word
 
+import com.skeleton.android.core.custominterfaces.FirebaseCallBack
+
 internal interface WordApi {
-    fun words(): List<WordEntity>
-    fun add(word: WordEntity): Any
+    fun words(firebaseCallBack: FirebaseCallBack)
     fun addFirebase(word: WordEntity)
-    fun readFirebaseWord(key: String)
 }

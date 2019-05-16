@@ -9,6 +9,7 @@ import com.skeleton.android.core.platform.ContextHandler
 import javax.inject.Inject
 import javax.inject.Singleton
 
+
 @Singleton
 class WordService
 @Inject
@@ -30,27 +31,6 @@ constructor(contextHandler: ContextHandler, private val firebaseDatabase: Fireba
         database = FirebaseDatabase.getInstance()
         databaseReference = database.getReference("word")
 
-        /*databaseReference.addValueEventListener(object : ValueEventListener {
-
-            override fun onCancelled(p0: DatabaseError) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
-
-            override fun onDataChange(p0: DataSnapshot) {
-
-                if (p0.exists()) {
-
-                    for(h in p0.children) {
-                        //val word = h.getValue(Word::class.java)
-                        wordList.add(Word(p0.key.toString(), p0.value.toString()))
-                        firebaseCallBack.onComplete(wordList)
-                    }
-
-                }
-
-            }
-
-        })*/
 
         val deviceListListener = object : ChildEventListener {
 
@@ -58,20 +38,20 @@ constructor(contextHandler: ContextHandler, private val firebaseDatabase: Fireba
 
             }
 
-            override fun onChildMoved(p0: DataSnapshot, p1: String?) {
-                Log.d("Firebase", "onChildMoved:" + p0.key!!)
+            override fun onChildMoved(dataSnapshot: DataSnapshot, p1: String?) {
+                Log.d("Firebase", "onChildMoved:" + dataSnapshot.key!!)
             }
 
-            override fun onChildChanged(p0: DataSnapshot, p1: String?) {
+            override fun onChildChanged(dataSnapshot: DataSnapshot, p1: String?) {
 
-                val aux = Word(
-                    p0.key.toString(),
-                    p0.child("word").value.toString()
+                val response = Word(
+                    dataSnapshot.key.toString(),
+                    dataSnapshot.child("word").value.toString()
                 )
 
                 for ( i in 0..wordList.size){
-                    if(wordList[i].id == aux.id){
-                        wordList[i]=aux
+                    if(wordList[i].id == response.id){
+                        wordList[i]= response
                         break
                     }
                 }
@@ -80,20 +60,21 @@ constructor(contextHandler: ContextHandler, private val firebaseDatabase: Fireba
                 firebaseCallBack.onComplete(wordList)
             }
 
-            override fun onChildAdded(p0: DataSnapshot, p1: String?) {
+            override fun onChildAdded(dataSnapshot: DataSnapshot, p1: String?) {
                 wordList.add(
                     Word(
-                        p0.key.toString(),
-                        p0.child("word").value.toString()
+                        dataSnapshot.key.toString(),
+                        dataSnapshot.child("word").value.toString()
                     )
                 )
+
                 firebaseCallBack.onComplete(wordList)
             }
 
-            override fun onChildRemoved(p0: DataSnapshot) {
+            override fun onChildRemoved(dataSnapshot: DataSnapshot) {
 
                 for (i in 0..wordList.size) {
-                    if (wordList[i].id == p0.key.toString()) {
+                    if (wordList[i].id == dataSnapshot.key.toString()) {
                         wordList.removeAt(i)
                         break
                     }
